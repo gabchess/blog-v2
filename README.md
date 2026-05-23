@@ -94,9 +94,9 @@ Without this webhook, new posts appear after the next manual deploy. With it, a 
 
 ## Newsletter subscribe (Substack)
 
-The subscribe CTA on each post links out to Octant Labs' Substack. The Substack URL is pending team confirmation; the link target is currently a `#TODO-substack-url` placeholder in `src/pages/blog/[slug].astro`. Replace before production cutover.
+Each post page links to [octant.substack.com](https://octant.substack.com/) for newsletter signup. Substack hosts the subscribe surface, the list, and the delivery. Nothing in this codebase touches email infrastructure.
 
-Rationale for moving subscribe off-repo: any newsletter endpoint we ship is a server endpoint we have to maintain, monitor, and secure. Substack hosts the subscribe surface, the list, and the delivery, so this codebase stays purely static.
+Rationale: any newsletter endpoint we ship is a server endpoint we have to maintain, monitor, and secure. Moving subscribe off-repo keeps this codebase purely static and removes an entire attack surface.
 
 ---
 
