@@ -10,7 +10,7 @@ interface Props {
 const {
   title,
   description = "Octant Blog: research, epoch recaps, and ecosystem news from the Octant protocol.",
-  ogImage = "/og-default.png",
+  ogImage,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
@@ -38,7 +38,7 @@ const year = new Date().getFullYear();
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
 
     <!-- Font preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

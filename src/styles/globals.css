@@ -222,11 +222,11 @@ pre {
   border: 1px solid var(--border-default);
   border-radius: 6px;
   overflow: hidden;
-  transition: border-color 150ms ease, background-color 150ms ease;
+  transition: box-shadow 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
 .post-card:hover {
-  border-left: 3px solid var(--color-teal);
+  box-shadow: inset 3px 0 0 var(--color-teal);
   background-color: #282828;
 }
 
