@@ -55,7 +55,7 @@ const year = new Date().getFullYear();
         />
       </a>
       <nav class="site-nav">
-        <a href="/">Blog</a>
+        <a href="/" aria-current={Astro.url.pathname === "/" ? "page" : undefined}>Blog</a>
       </nav>
     </header>
 
