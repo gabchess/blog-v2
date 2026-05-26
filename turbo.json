@@ -1,0 +1,130 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env", ".env.staging"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "POSTGRES_URL",
+    "JWT_SECRET",
+    "ENV",
+    "NODE_ENV",
+    "LOG_LEVEL",
+    "ANVIL_PORT",
+    "MONGODB_PORT",
+    "POSTGRES_PORT"
+  ],
+  "tasks": {
+    "db:generate": {
+      "outputs": [
+        "generated/**",
+        "../validation/src/generated/**"
+      ],
+      "cache": false,
+      "env": ["DATABASE_URL", "POSTGRES_URL"]
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false,
+      "env": ["DATABASE_URL", "POSTGRES_URL"]
+    },
+    "build": {
+      "dependsOn": ["^build", "db:generate"],
+      "inputs": ["src/**", "tsconfig.json", "package.json"],
+      "outputs": ["dist/**"],
+      "env": ["DATABASE_URL"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "^db:generate"]
+    },
+    "lint": {},
+    "test": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "@octant/trpc#test:e2e": {
+      "dependsOn": ["^build", "@octant/graphql#test:e2e"],
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "@octant/db-postgres#db:generate": {
+      "outputs": ["generated/**"],
+      "cache": false,
+      "env": ["POSTGRES_URL"]
+    },
+    "@octant/db-postgres#db:push": {
+      "cache": false,
+      "env": ["POSTGRES_URL"]
+    },
+    "test:all": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["^build", "^db:generate"],
+      "persistent": true,
+      "cache": false,
+      "env": [
+        "DATABASE_URL",
+        "POSTGRES_URL",
+        "JWT_SECRET",
+        "ENV",
+        "LOG_LEVEL",
+        "REST_PORT",
+        "GRAPHQL_PORT",
+        "TRPC_PORT",
+        "WEB_PORT",
+        "ADMIN_PORT",
+        "WIDGET_PORT",
+        "QF_SIMULATOR_PORT"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "@octant/subgraph#build": {
+      "dependsOn": [],
+      "inputs": ["src/**", "schema.graphql", "subgraph.yaml", "networks.json", "abis/**"],
+      "outputs": ["build/**", "generated/**"],
+      "cache": false
+    },
+    "@octant/chain#build": {
+      "dependsOn": [],
+      "inputs": ["src/**", "script/**", "foundry.toml", "remappings.txt"],
+      "outputs": ["out/**"],
+      "cache": false
+    },
+    "@octant/chain#dev": {
+      "dependsOn": [],
+      "persistent": true,
+      "cache": false,
+      "env": ["ANVIL_PORT"]
+    },
+    "@octant/subgraph#dev": {
+      "dependsOn": [],
+      "persistent": true,
+      "cache": false,
+      "env": [
+        "GRAPH_ETHEREUM_RPC",
+        "GRAPH_NODE_HTTP_PORT",
+        "GRAPH_NODE_WS_PORT",
+        "GRAPH_NODE_ADMIN_PORT",
+        "GRAPH_NODE_STATUS_PORT",
+        "GRAPH_IPFS_PORT",
+        "GRAPH_POSTGRES_PORT",
+        "ANVIL_PORT"
+      ]
+    },
+    "@octant/web#build": {
+      "env": ["VITE_MAINNET_RPC_URL", "VITE_SUBGRAPH_URL"]
+    },
+    "@octant/admin#build": {
+      "env": ["VITE_GRAPHQL_URL"]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@octant/vote-types",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --build",
+    "test": "vitest run",
+    "lint": "eslint src",
+    "clean": "rm -rf dist .turbo tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "peerDependencies": {
+    "viem": ">=2.21.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "viem": "^2.21.0",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,89 @@
+# syntax=docker/dockerfile:1
+
+# =============================================================================
+# Production Dockerfile for Turborepo Monorepo — Frontend (Nginx)
+# =============================================================================
+# Build: docker build --build-arg APP=web -t myapp-web -f Dockerfile.nginx .
+# Run:   docker run -p 4000:4000 myapp-web
+# =============================================================================
+
+ARG NODE_VERSION=22.22.0
+ARG NGINX_VERSION=1.29.8
+ARG APP=web
+
+# =============================================================================
+# Stage 1: Base - Common Node.js setup for build stages
+# =============================================================================
+FROM node:${NODE_VERSION}-slim AS base
+
+WORKDIR /app
+
+RUN --mount=type=bind,source=package.json,target=/app/package.json \
+    corepack enable && corepack install
+
+# =============================================================================
+# Stage 2: Pruner - Use Turborepo to extract only needed packages
+# =============================================================================
+FROM base AS pruner
+
+ARG APP
+
+COPY . .
+
+RUN pnpm dlx turbo prune @octant/${APP} --docker
+
+# =============================================================================
+# Stage 3: Builder - Install dependencies and build
+# =============================================================================
+FROM base AS builder
+
+ARG APP
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG VITE_BASE_PATH=/
+
+ENV TURBO_TELEMETRY_DISABLED=1
+ENV SENTRY_ORG=$SENTRY_ORG
+ENV SENTRY_PROJECT=$SENTRY_PROJECT
+ENV SENTRY_RELEASE=$SENTRY_RELEASE
+ENV VITE_BASE_PATH=$VITE_BASE_PATH
+
+# Copy pruned package.json files and lockfile
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+RUN --mount=type=secret,id=NPM_REGISTRY_TOKEN,env=NPM_REGISTRY_TOKEN \
+    --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm config set @golemfoundation:registry "https://npm.pkg.github.com/" && \
+    pnpm config set "//npm.pkg.github.com/:_authToken" "$NPM_REGISTRY_TOKEN" && \
+    pnpm install --frozen-lockfile
+
+# Copy source code
+COPY --from=pruner /app/out/full/ .
+COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
+
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN \
+    pnpm turbo build --filter=@octant/${APP}
+
+# =============================================================================
+# Stage 4: Production - Nginx serves the static files
+# =============================================================================
+FROM nginx:${NGINX_VERSION}-trixie AS production
+
+ARG APP
+
+WORKDIR /app
+
+RUN rm -rf /etc/nginx/* /docker-entrypoint.d/*
+
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/apps/${APP}/dist/ ./
+
+EXPOSE 4000
+EXPOSE 8080
+
+# Built-in `nginx` user (UID/GID 101). Numeric form for Kubernetes runAsNonRoot.
+USER 101:101

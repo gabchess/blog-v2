@@ -1,0 +1,33 @@
+{
+  "name": "@octant/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --build && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --build",
+    "test": "vitest run",
+    "lint": "eslint src",
+    "clean": "rm -rf dist .turbo tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@octant/subgraph-client": "workspace:*",
+    "@octant/validation": "workspace:*",
+    "@octant/web3": "workspace:*",
+    "@tanstack/react-query": "^5.62.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "viem": "^2.21.0",
+    "wagmi": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,51 @@
+services:
+  graph-node:
+    image: graphprotocol/graph-node
+    ports:
+      - "${GRAPH_NODE_HTTP_PORT:-8000}:8000"     # GraphQL HTTP
+      - "${GRAPH_NODE_WS_PORT:-8001}:8001"       # GraphQL WS
+      - "${GRAPH_NODE_ADMIN_PORT:-8020}:8020"     # JSON-RPC admin
+      - "${GRAPH_NODE_STATUS_PORT:-8030}:8030"    # Index node status
+    depends_on:
+      graph-postgres:
+        condition: service_healthy
+      ipfs:
+        condition: service_started
+    environment:
+      postgres_host: graph-postgres
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: "ipfs:5001"
+      ethereum: "${GRAPH_ETHEREUM_RPC:-localhost:http://host.docker.internal:8545}"
+      GRAPH_LOG: info
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ipfs:
+    image: ipfs/kubo:v0.27.0
+    ports:
+      - "${GRAPH_IPFS_PORT:-5001}:5001"
+    volumes:
+      - ipfs_data:/data/ipfs
+
+  graph-postgres:
+    image: postgres:16
+    ports:
+      - "${GRAPH_POSTGRES_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: graph-node
+      POSTGRES_PASSWORD: let-me-in
+      POSTGRES_DB: graph-node
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - graph_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U graph-node"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ipfs_data:
+  graph_postgres_data:

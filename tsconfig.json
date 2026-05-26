@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "references": [
+    { "path": "packages/db" },
+    { "path": "packages/db-postgres" },
+    { "path": "packages/validation" },
+    { "path": "apps/admin" },
+    { "path": "apps/graphql" },
+    { "path": "apps/qf-simulator" },
+    { "path": "apps/rest" },
+    { "path": "apps/trpc" },
+    { "path": "apps/web" },
+    { "path": "apps/widget" }
+  ],
+  "files": []
+}
