@@ -1,13 +1,105 @@
+# Dependencies
 node_modules/
-dist/
-.astro/
-.vercel/
-.env
-.env.local
-.DS_Store
-*.log
+.pnp
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
-# Locally-installed agent skill packages (re-install via `npx skills add ...`)
-# See README Section 8 for install commands.
-.agents/
-.vercel
+# Turborepo
+.turbo/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# TypeScript
+*.tsbuildinfo
+
+# Prisma generated
+**/generated/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.eslintcache
+.stylelintcache
+.cache/
+.parcel-cache/
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Deployment
+.vercel/
+
+# SSL certificates
+*.pem
+localhost.pem
+localhost-key.pem
+
+# Foundry (packages/chain)
+packages/chain/out/
+packages/chain/cache/
+packages/chain/broadcast/
+packages/chain/dependencies/
+packages/chain/networks.json
+
+# Subgraph (apps/subgraph)
+apps/subgraph/build/
+apps/subgraph/generated/
+apps/subgraph/networks.json
+
+# Claude plans
+.claude/
+
+# Misc
+test.http

@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": "./src",
+    "paths": {
+      "@signing/*": ["./signing/*"],
+      "@serialization/*": ["./serialization/*"],
+      "@storage/*": ["./storage/*"],
+      "@merkle/*": ["./merkle/*"],
+      "@batch/*": ["./batch/*"],
+      "@math/*": ["./math/*"]
+    }
+  },
+  "references": [{ "path": "../vote-types" }],
+  "include": ["src/**/*"],
+  "exclude": ["src/**/__tests__/**"]
+}

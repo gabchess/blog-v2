@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  },
+  "include": [
+    "src/index.ts",
+    "src/generated/schemas/variants/**/*",
+    "src/generated/schemas/enums/**/*",
+    "src/generated/postgres/schemas/variants/**/*",
+    "src/generated/postgres/schemas/enums/**/*"
+  ]
+}

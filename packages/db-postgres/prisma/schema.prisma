@@ -1,0 +1,126 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../../validation/src/generated/postgres"
+  config   = "./zod-generator.config.json"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+  qfRounds     QfRound[]
+}
+
+model Session {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  tokenHash         String   @unique
+  tokenFamily       String
+  previousTokenHash String?
+  expiresAt         DateTime
+  createdAt         DateTime @default(now())
+  lastUsedAt        DateTime @default(now())
+  ipAddress         String?
+  userAgent         String?
+}
+
+model LoginAttempt {
+  id        String   @id @default(uuid())
+  email     String
+  ipAddress String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ipAddress, createdAt])
+}
+
+model QfRound {
+  id               String            @id @default(uuid())
+  name             String
+  matchingPool     Float
+  voterBudget      Float
+  status           String            @default("setup")
+  adminId          String
+  admin            User              @relation(fields: [adminId], references: [id])
+  totalRawMatch    Float?
+  scalingFactor    Float?
+  matchingPoolUsed Float?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  projects         QfProject[]
+  voterCodes       QfVoterCode[]
+  votes            QfVote[]
+  projectResults   QfProjectResult[]
+}
+
+model QfProject {
+  id             String            @id @default(uuid())
+  name           String
+  description    String            @default("")
+  roundId        String
+  round          QfRound           @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  allocations    QfAllocation[]
+  projectResults QfProjectResult[]
+}
+
+model QfVoterCode {
+  id      String  @id @default(uuid())
+  code    String
+  used    Boolean @default(false)
+  roundId String
+  round   QfRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  @@unique([roundId, code])
+}
+
+model QfVote {
+  id          String         @id @default(uuid())
+  voterCode   String
+  roundId     String
+  round       QfRound        @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  allocations QfAllocation[]
+
+  @@unique([roundId, voterCode])
+}
+
+model QfAllocation {
+  id        String    @id @default(uuid())
+  voteId    String
+  vote      QfVote    @relation(fields: [voteId], references: [id], onDelete: Cascade)
+  projectId String
+  project   QfProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  amount    Float
+
+  @@unique([voteId, projectId])
+}
+
+model QfProjectResult {
+  id                  String    @id @default(uuid())
+  roundId             String
+  round               QfRound   @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  projectId           String
+  project             QfProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  directContributions Float
+  rawMatch            Float
+  scaledMatch         Float
+  total               Float
+
+  @@unique([roundId, projectId])
+}

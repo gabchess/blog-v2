@@ -1,0 +1,192 @@
+# ADR-506: Runtime Environment Variable Injection for Static Frontend Apps
+
+## Status
+Accepted
+
+## Context
+
+Frontend applications (Web, Admin, Widget, QF Simulator) are built by Vite into static JS/CSS/HTML bundles. Vite replaces `import.meta.env.VITE_*` references with their literal values at build time. This means the built bundle hard-codes every URL, API endpoint, and feature flag.
+
+The original approach relied entirely on `import.meta.env`:
+
+```ts
+const apiUrl = import.meta.env.VITE_API_URL;
+```
+
+This creates a fundamental deployment problem: **a single Docker image cannot serve multiple environments**. To change `VITE_API_URL` from staging to production, the entire image must be rebuilt. Rebuilding per environment breaks the principle that the same image artifact should be promoted through staging → production unchanged.
+
+A second constraint comes from ADR-505: frontend apps are served by Nginx from a static file tree. There is no Node.js process running at request time — the only opportunity to customise the container is via an externally mounted file.
+
+## Security Constraint — No Secrets in Frontend Config
+
+> **`VITE_*` variables must never contain secrets** (API keys, private keys, auth tokens, passwords, or any value that grants privileged access).
+
+The entire content of `env.js` is served as a public static file by Nginx. Any browser user can fetch `https://<app-domain>/env.js` and read every value in plain text. Additionally, wherever `env.js` is generated from (ConfigMap, values files, CI pipeline) it is stored unencrypted.
+
+Frontend config is public configuration: service URLs, contract addresses, public project IDs, feature flags, and observability DSNs. If a value would be dangerous to expose publicly, it does not belong in a frontend app at all — it belongs in a backend service.
+
+## Decision
+
+Environment variables are injected into static frontend apps via a **`/env.js` file** that is loaded synchronously by `index.html` before the app bundle. The file sets `window.RUNTIME_CONFIG` as a plain JS object. `src/env.ts` reads from `window.RUNTIME_CONFIG` first and falls back to `import.meta.env` for local development.
+
+### File layout
+
+Each app ships two files alongside its source:
+
+| File | Committed | Purpose |
+|------|-----------|---------|
+| `env.example.js` | ✅ yes | Template documenting all required variables with example/default values |
+| `env.js` | ❌ gitignored | Local dev override; copied from `env.example.js` and filled in |
+
+`env.js` is **not** included in the Vite build output (`dist/`). Vite only copies files from `public/`; the project-root `env.js` is deliberately excluded so it cannot be baked in at build time.
+
+### `env.example.js` — the shape of the contract
+
+```js
+window.RUNTIME_CONFIG = {
+  VITE_API_URL: 'https://api.example.com',
+  VITE_SENTRY_DSN: '',
+  VITE_SENTRY_ENVIRONMENT: '',
+  // ...
+};
+```
+
+This file serves as documentation: it lists every variable the app requires and provides example values. It is the source of truth for what must be supplied in each environment, and its key set must stay in sync with `src/types/env.ts`.
+
+### `index.html` — synchronous load before the app bundle
+
+```html
+<head>
+  <script src="/env.js"></script>
+</head>
+<body>
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+```
+
+The `<script>` tag is synchronous (no `async`, no `defer`) and placed before the app module. This guarantees `window.RUNTIME_CONFIG` is fully populated before any React code executes.
+
+### `src/env.ts` — fallback chain
+
+```ts
+export function getEnvVar<T = string>(
+  runtimeKey: string,
+  default_value?: T,
+  parser?: (v: string) => T,
+): T {
+  let value = window?.RUNTIME_CONFIG?.[runtimeKey];  // 1. runtime: from env.js
+  if (!value) {
+    value = getViteMetaEnv()[runtimeKey];             // 2. dev: from import.meta.env
+  }
+  if (!value) {
+    if (default_value !== undefined) return default_value;
+    throw new Error(`Missing required variable: ${runtimeKey}`);
+  }
+  return parser ? parser(value) : value as T;
+}
+```
+
+`getViteMetaEnv()` is a thin wrapper around `import.meta.env` extracted into its own module (`src/vite-meta-env.ts`) so it can be mocked in Jest without `import.meta` causing test-runner errors.
+
+### Local development flow
+
+1. Developer copies `env.example.js` → `env.js` and fills in local values.
+2. Vite dev server serves files from the project root; `env.js` is accessible at `/env.js`.
+3. `window.RUNTIME_CONFIG` is populated from `env.js`; `getEnvVar()` reads it directly.
+4. If `env.js` is absent (404), the browser logs a warning but the app continues; `getEnvVar()` falls back to `import.meta.env` populated by Vite from `.env`.
+
+### Staging and production flow — Kubernetes ConfigMap
+
+`env.js` is NOT in `dist/`. In Kubernetes environments it is injected via a **Helm-managed ConfigMap** mounted at `/app/env.js`:
+
+**ConfigMap** (generated by the Helm chart from `values.runtimeConfig`):
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+data:
+  env.js: |
+    window.RUNTIME_CONFIG = {
+      {{- range $k, $v := .Values.runtimeConfig }}
+        {{ $k }}: '{{ $v }}',
+      {{- end }}
+    };
+```
+
+**Deployment** mounts the ConfigMap as a read-only file:
+
+```yaml
+volumeMounts:
+  - name: runtime-config
+    mountPath: /app/env.js
+    subPath: env.js
+    readOnly: true
+
+volumes:
+  - name: runtime-config
+    configMap:
+      items:
+        - key: env.js
+          path: env.js
+```
+
+**Per-environment values** supply the concrete values:
+
+```yaml
+# values-staging.yaml
+runtimeConfig:
+  VITE_API_URL: "https://staging-api.example.com/"
+  VITE_SENTRY_ENVIRONMENT: "staging"
+
+# values-production.yaml
+runtimeConfig:
+  VITE_API_URL: "https://api.example.com/"
+  VITE_SENTRY_ENVIRONMENT: "production"
+```
+
+**Hot-reload on config change**: the Deployment carries `reloader.stakater.com/auto: "true"`. Stakater Reloader watches ConfigMaps and automatically triggers a rolling restart whenever `runtimeConfig` values change — no manual `kubectl rollout restart` needed.
+
+### Read-only mount and security
+
+The `readOnly: true` mount flag means that even if a process inside the Nginx container were compromised, it could not modify `/app/env.js`. The config comes entirely from the gitops repository and is never writable at runtime.
+
+## Alternatives Considered
+
+### Build-time injection only (`import.meta.env` / Vite defaults)
+- **Pros:** zero runtime machinery; built-in Vite support; type-safe at compile time
+- **Cons:** one image build per environment; cannot promote the same image from staging to production; `VITE_*` values baked into the JS bundle
+- **Why rejected:** violates the build-once, deploy-many principle; impractical for CI/CD pipelines that promote image digests
+
+### Container entrypoint script generating `env.js`
+- **Pros:** works in non-Kubernetes environments (bare Docker, Docker Compose); no external config management needed
+- **Cons:** requires a writable filesystem in the container (`readOnly: true` on the production mount is incompatible); more complex Dockerfile; values passed as container env vars could appear in `docker inspect`; the generated file content is harder to audit than a version-controlled value
+- **Why rejected:** a read-only ConfigMap mount is simpler, more auditable, and more secure; for local Docker Compose usage, the local `env.js` workflow is sufficient
+
+### Nginx `envsubst` via `docker-entrypoint.d/`
+- **Pros:** built into the official Nginx image
+- **Cons:** `/docker-entrypoint.d/` was intentionally cleared (ADR-505); still requires a writable filesystem; same auditability concerns as the entrypoint script
+- **Why rejected:** cleared infrastructure; same downsides as the entrypoint approach
+
+### Injecting config into `index.html` via Nginx `sub_filter`
+- **Pros:** no separate file
+- **Cons:** requires `ngx_http_sub_filter_module`; config must be a plain string substituted into HTML; complex to type-safely consume; adds per-request processing overhead
+- **Why rejected:** more complex than a standalone `env.js` with no tangible advantage
+
+## Consequences
+
+### Positive
+- A single Docker image is deployed to staging and production unchanged; only the ConfigMap values differ.
+- `env.example.js` is a self-documenting contract committed alongside the app source; any new required variable is immediately visible to reviewers.
+- Local dev requires no infrastructure changes: `env.js` at the project root is served by Vite identically to how Nginx serves it in production.
+- `getEnvVar()` is the single, typed, testable access point for all config; the fallback chain is fully covered by unit tests in `src/env.test.ts`.
+- `readOnly: true` on the ConfigMap mount prevents runtime tampering.
+- Stakater Reloader eliminates manual rollout restarts on config changes.
+
+### Negative
+- Every new `VITE_*` variable must be added in three places: `src/types/env.ts`, `src/env.ts`, and `env.example.js`. The deployment values files must also be updated for each environment.
+- All runtime config is public. `VITE_*` variables must only contain non-sensitive, client-safe values. This is a hard constraint, not a recommendation.
+- Variable values containing single quotes (`'`) break the Helm ConfigMap template, which wraps values in `'...'`. Values must be plain strings without embedded quotes.
+
+### Risks
+- **`env.js` absent in production**: if the ConfigMap is missing or the volume mount is misconfigured, Nginx serves a 404 for `/env.js` and the app falls back to build-time `import.meta.env` values, which may point to the wrong environment. Mitigation: a startup check in the app can validate that critical variables match expected patterns.
+- **ConfigMap and source out of sync**: if a new `VITE_*` variable is added to `env.example.js` but not to the deployment values files, `getEnvVar()` throws at runtime for required variables, or silently returns a default for optional ones. Mitigation: CI can diff `env.example.js` keys against values files as a lint step.

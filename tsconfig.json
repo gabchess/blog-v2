@@ -1,7 +1,19 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "types": ["@sanity/astro/module"]
-  }
+    "noEmit": true
+  },
+  "references": [
+    { "path": "packages/db" },
+    { "path": "packages/db-postgres" },
+    { "path": "packages/validation" },
+    { "path": "apps/admin" },
+    { "path": "apps/graphql" },
+    { "path": "apps/qf-simulator" },
+    { "path": "apps/rest" },
+    { "path": "apps/trpc" },
+    { "path": "apps/web" },
+    { "path": "apps/widget" }
+  ],
+  "files": []
 }

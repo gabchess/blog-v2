@@ -1,0 +1,30 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: OctantToken
+    network: localhost
+    source:
+      abi: OctantToken
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      startBlock: 1
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+        - Approval
+        - TokenStats
+      abis:
+        - name: OctantToken
+          file: ./abis/OctantToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mapping.ts
