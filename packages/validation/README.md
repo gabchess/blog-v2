@@ -177,7 +177,7 @@ export const ProductValidationSchema = GeneratedSchema
 2. **prisma-zod-generator 2.x** - Requires Prisma 7, incompatible with our MongoDB setup
 3. **prisma-zod-generator 1.32.x** - Has bug with `@prisma/internals@7` dependency
 
-See [ADR-002](../../docs/adr/ADR-002-prisma-mongodb-setup.md) for full details.
+Prisma 7.x MongoDB support and prisma-zod-generator 2.x compatibility are the constraints. Do not bump these versions without testing against a MongoDB-backed Prisma schema.
 
 ## TypeScript Configuration
 
@@ -192,7 +192,7 @@ This package uses `moduleResolution: "Bundler"` because `prisma-zod-generator` o
 }
 ```
 
-See [ADR-005](../../docs/adr/ADR-005-typescript-module-resolution.md) for the full module resolution strategy.
+The `prisma-zod-generator` outputs imports without `.js` extensions, which requires `Bundler` resolution to compile cleanly.
 
 ## Development
 

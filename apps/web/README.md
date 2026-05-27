@@ -14,4 +14,4 @@ pnpm --filter @octant/web dev
 - Vite + React 19
 - `@workspace/ui` (shadcn components)
 - `@octant/validation` (Zod schemas)
-- Prismic for content (deferred)
+- Prismic for content
