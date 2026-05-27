@@ -9,7 +9,7 @@ description: Workflow for generating TypeScript types from Sanity Schema and GRO
 Sanity TypeGen generates TypeScript types from your schema and GROQ queries. Types can be generated automatically or manually.
 
 ### Automatic (Recommended)
-Enable in `sanity.cli.ts` — types regenerate during `sanity dev` and `sanity build`:
+Enable in `sanity.cli.ts` : types regenerate during `sanity dev` and `sanity build`:
 
 ```typescript
 // sanity.cli.ts
@@ -93,7 +93,7 @@ export default defineCliConfig({
 ### Project Structure Examples
 
 **Single Repo / Embedded Studio (most common):**
-Use defaults — no extra config needed.
+Use defaults : no extra config needed.
 
 **Monorepo** (Studio in `apps/studio`, Frontend in `apps/web`):
 ```typescript
@@ -122,7 +122,7 @@ const client = createClient({...});
 
 const POSTS_QUERY = defineQuery(`*[_type == "post"]{ title, slug }`);
 
-// Return type is automatically inferred — no manual type import needed!
+// Return type is automatically inferred : no manual type import needed!
 const posts = await client.fetch(POSTS_QUERY);
 ```
 
@@ -177,20 +177,20 @@ const POST_DETAIL_QUERY = defineQuery(`*[_type == "post" && slug.current == $slu
 
 // Duplicate names will conflict
 const QUERY = defineQuery(`*[_type == "post"]`)  // file-a.ts
-const QUERY = defineQuery(`*[_type == "author"]`) // file-b.ts — overwrites!
+const QUERY = defineQuery(`*[_type == "author"]`) // file-b.ts : overwrites!
 ```
 
 ### Supported Query Formats
 Queries must be assigned to a variable using `groq` or `defineQuery`:
 
 ```typescript
-// Works — groq template tag
+// Works : groq template tag
 const query = groq`*[_type == "post"]`
 
-// Works — defineQuery
+// Works : defineQuery
 const query = defineQuery(`*[_type == "post"]`)
 
-// Won't work — inline query
+// Won't work : inline query
 await client.fetch(groq`*[_type == "post"]`)
 ```
 

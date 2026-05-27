@@ -169,7 +169,7 @@
   }
 }
 
-/* Markdown rendering — used by both the rendered public profile (react-markdown
+/* Markdown rendering: used by both the rendered public profile (react-markdown
    output) and the in-editor surface (tiptap). Tailwind's preflight zeroes
    element margins, so we re-introduce the typographic spacing markdown needs
    to read like prose rather than one wall of text. */

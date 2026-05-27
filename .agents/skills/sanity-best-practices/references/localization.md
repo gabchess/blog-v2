@@ -23,7 +23,7 @@ Use the contents list to jump directly to the localization pattern you need.
 ## 1. Guiding Principles
 
 ### Priority: Easy Authoring Experience
-The structured nature of Sanity schemas and GROQ make it easy to parse localized content for your frontend. **Never** let frontend architecture dictate your localization approach — prioritize the editor experience.
+The structured nature of Sanity schemas and GROQ make it easy to parse localized content for your frontend. **Never** let frontend architecture dictate your localization approach : prioritize the editor experience.
 
 ### Avoid Content Duplication
 Don't create nearly identical copies with slight differences (e.g., US vs British English). Use Portable Text marks and custom blocks to swap out words or sections as needed.
@@ -307,7 +307,7 @@ export const structure: StructureResolver = (S) =>
 
 ## 7. Field-Level Localization
 
-Use **sanity-plugin-internationalized-array** (NOT localized objects — they hit attribute limits).
+Use **sanity-plugin-internationalized-array** (NOT localized objects : they hit attribute limits).
 
 ```bash
 npm install sanity-plugin-internationalized-array
@@ -427,6 +427,6 @@ npm install @sanity/language-filter
 - `yoursite.com/en/my-page` → `yoursite.com/fr/my-page`
 - `yoursite.com/my-page` → redirects to default locale
 
-**Avoid:** Having the default locale at root without prefix — causes SEO edge cases.
+**Avoid:** Having the default locale at root without prefix : causes SEO edge cases.
 
 Use Next.js middleware (or framework equivalent) to redirect paths missing a locale prefix to the default locale.

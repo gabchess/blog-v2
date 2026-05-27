@@ -5,7 +5,7 @@ description: Integration guide for Sanity with Shopify using the Hydrogen framew
 
 # Sanity + Shopify + Hydrogen Rules
 
-**Package:** [`hydrogen-sanity`](https://github.com/sanity-io/hydrogen-sanity) — requires `@shopify/hydrogen >= 2025.5.0`
+**Package:** [`hydrogen-sanity`](https://github.com/sanity-io/hydrogen-sanity) : requires `@shopify/hydrogen >= 2025.5.0`
 
 ## 1. Architecture Overview
 

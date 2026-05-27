@@ -5,7 +5,7 @@ Effective content models maximize reuse while minimizing duplication. Here are p
 ## The Content Reuse Spectrum
 
 ```
-Full Duplication ←————————————————→ Full Reference
+Full Duplication ←::::::::::::::::→ Full Reference
 (Copy everything)                    (Link to one source)
 ```
 

@@ -190,7 +190,7 @@ const components: PortableTextComponents = {
 
 ## 6. Creating Mark Components
 
-Marks are inline annotations that wrap text—links, highlights, or custom references.
+Marks are inline annotations that wrap text:links, highlights, or custom references.
 
 ### Schema Definition (Annotation)
 
@@ -331,7 +331,7 @@ When querying documents with Portable Text, expand custom blocks:
 
 When Visual Editing is enabled, text content contains invisible stega characters for click-to-edit functionality.
 
-**For text rendering:** Let stega characters pass through—they enable overlays:
+**For text rendering:** Let stega characters pass through:they enable overlays:
 ```typescript
 // Good - stega preserved for click-to-edit
 <h2>{children}</h2>

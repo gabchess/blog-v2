@@ -15,10 +15,10 @@ When should content be linked (referenced) vs copied (embedded)? This decision a
 ## When to Reference
 
 Use references when content:
-- **Is reusable** — Same author across many articles
-- **Needs central management** — Update product info once
-- **Has its own lifecycle** — Published/draft independent of parent
-- **Should stay in sync** — Price changes reflect everywhere
+- **Is reusable** : Same author across many articles
+- **Needs central management** : Update product info once
+- **Has its own lifecycle** : Published/draft independent of parent
+- **Should stay in sync** : Price changes reflect everywhere
 
 **Examples:**
 - Author profiles
@@ -30,10 +30,10 @@ Use references when content:
 ## When to Embed
 
 Use embedded objects when content:
-- **Is unique to this document** — Page-specific hero
-- **Doesn't make sense alone** — SEO metadata
-- **Should be copied, not linked** — Historical snapshot
-- **Simplifies editing** — All fields in one form
+- **Is unique to this document** : Page-specific hero
+- **Doesn't make sense alone** : SEO metadata
+- **Should be copied, not linked** : Historical snapshot
+- **Simplifies editing** : All fields in one form
 
 **Examples:**
 - SEO metadata

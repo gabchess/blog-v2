@@ -219,7 +219,7 @@ export async function POST(req: NextRequest) {
 
 ### Tag-Based Revalidation
 
-"Update once, revalidate everywhere" — best for referenced content.
+"Update once, revalidate everywhere" : best for referenced content.
 
 **1. Tag Your Queries:**
 ```typescript
@@ -278,8 +278,8 @@ export async function POST(req: NextRequest) {
 
 Webhooks fire *before* Sanity CDN updates. If you see stale data:
 
-1. **Add delay** — Pass `true` as third arg to `parseBody`
-2. **Or bypass CDN** — Set `useCdn: false` in client config (use sparingly)
+1. **Add delay** : Pass `true` as third arg to `parseBody`
+2. **Or bypass CDN** : Set `useCdn: false` in client config (use sparingly)
 
 ## 4. Visual Editing (Stega) & Clean Data
 

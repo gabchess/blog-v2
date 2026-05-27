@@ -1,6 +1,6 @@
 ---
 title: Sanity Functions
-description: Rules for Sanity Functions — serverless event handlers that react to content changes in Sanity's Content Lake. Covers blueprint configuration, handler patterns, testing, deployment, and recursion control.
+description: Rules for Sanity Functions : serverless event handlers that react to content changes in Sanity's Content Lake. Covers blueprint configuration, handler patterns, testing, deployment, and recursion control.
 ---
 
 # Sanity Functions
@@ -20,10 +20,10 @@ Serverless event handlers hosted on Sanity's infrastructure, configured via **Bl
 
 ## When NOT to use
 
-- Logic needs >900s execution or >200MB bundle — use an external worker
+- Logic needs >900s execution or >200MB bundle : use an external worker
 - High-throughput bulk operations that exceed rate limits (200/fn/30s, 4000/project/30s)
-- A simple POST to an external URL on publish with no document data shaping — use a webhook
-- Client-side or UI-driven logic (validation, conditional fields) — belongs in Studio schema config
+- A simple POST to an external URL on publish with no document data shaping : use a webhook
+- Client-side or UI-driven logic (validation, conditional fields) : belongs in Studio schema config
 
 ## Requirements
 
@@ -205,26 +205,26 @@ When testing locally, `context.clientOptions` only has `projectId` and `apiHost`
 | Option | Type | Default | Description |
 |:---|:---|:---|:---|
 | `name` | `string` | required | Must match the directory name under `functions/` |
-| `displayName` | `string` | — | Human-readable display name |
+| `displayName` | `string` | : | Human-readable display name |
 | `src` | `string` | `functions/<name>` | Path to function source directory |
 | `memory` | `number` | `1` | Memory in GB (max 10) |
 | `timeout` | `number` | `10` | Timeout in seconds (max 900) |
 | `runtime` | `string` | `'nodejs22.x'` | `'node'`, `'nodejs22.x'`, or `'nodejs24.x'` |
-| `project` | `string` | — | Project ID. Required if blueprint is org-scoped. |
-| `robotToken` | `string` | — | Custom robot token name for the function |
+| `project` | `string` | : | Project ID. Required if blueprint is org-scoped. |
+| `robotToken` | `string` | : | Custom robot token name for the function |
 | `event` | `object` | required | Event configuration (see below) |
-| `env` | `Record<string, string>` | — | Environment variables via `process.env` |
+| `env` | `Record<string, string>` | : | Environment variables via `process.env` |
 
 ### `event` Options
 
 | Option | Type | Default | Description |
 |:---|:---|:---|:---|
 | `on` | `string[]` | required | `'create'`, `'update'`, `'delete'`. Legacy `'publish'` is deprecated. |
-| `filter` | `string` | — | GROQ filter body (no `*[...]` wrapper) |
-| `projection` | `string` | — | GROQ projection to shape `event.data`. Wrap in `{}`. |
+| `filter` | `string` | : | GROQ filter body (no `*[...]` wrapper) |
+| `projection` | `string` | : | GROQ projection to shape `event.data`. Wrap in `{}`. |
 | `includeDrafts` | `boolean` | `false` | Trigger on draft changes |
 | `includeAllVersions` | `boolean` | `false` | Trigger on all document versions |
-| `resource` | `object` | — | Scope to dataset: `{ type: 'dataset', id: 'projectId.datasetName' }` |
+| `resource` | `object` | : | Scope to dataset: `{ type: 'dataset', id: 'projectId.datasetName' }` |
 
 ### `defineMediaLibraryAssetFunction`
 
@@ -268,10 +268,10 @@ Often best to use `['create', 'update']` together for published document trigger
 
 ## GROQ Filter Tips
 
-- Only the filter body — `_type == 'post'`, not `*[_type == 'post']`
-- `delta::changedAny(fieldName)` — trigger only when specific fields change
-- `sanity::dataset() == 'production'` — scope to a dataset without `resource` config
-- `_id in path('drafts.**')` with `includeDrafts: true` — draft-only triggers
+- Only the filter body : `_type == 'post'`, not `*[_type == 'post']`
+- `delta::changedAny(fieldName)` : trigger only when specific fields change
+- `sanity::dataset() == 'production'` : scope to a dataset without `resource` config
+- `_id in path('drafts.**')` with `includeDrafts: true` : draft-only triggers
 - Combine conditions to prevent recursion: `_type == 'post' && !defined(processedAt)`
 
 ---
@@ -280,7 +280,7 @@ Often best to use `['create', 'update']` together for published document trigger
 
 - Shape the data passed to `event.data`
 - Limited to the invoking document's scope (plus `→` for references)
-- Nested filters in projections (like `*[references(^._id)]`) will fail silently — query inside the function instead
+- Nested filters in projections (like `*[references(^._id)]`) will fail silently : query inside the function instead
 - Wrap in `{}`: `projection: '{title, _id, slug}'`
 
 ---
@@ -303,7 +303,7 @@ Access in handler code via `process.env.MY_VAR`.
 
 If your function mutates the same document type it listens to, you **will** create an infinite loop.
 
-**✅ Correct — use GROQ filters to exclude processed documents:**
+**✅ Correct : use GROQ filters to exclude processed documents:**
 ```typescript
 defineDocumentFunction({
   name: 'first-published',
@@ -314,7 +314,7 @@ defineDocumentFunction({
 })
 ```
 
-**✅ Correct — use `@sanity/client` v7.12.0+ for automatic lineage headers:**
+**✅ Correct : use `@sanity/client` v7.12.0+ for automatic lineage headers:**
 ```typescript
 import { createClient } from '@sanity/client'
 
@@ -326,7 +326,7 @@ const client = createClient({
 })
 ```
 
-**❌ Incorrect — no recursion guard:**
+**❌ Incorrect : no recursion guard:**
 ```typescript
 defineDocumentFunction({
   name: 'update-post',
@@ -500,7 +500,7 @@ export const handler = documentEventHandler(async ({ context, event }) => {
 
 ### Scope to a specific dataset
 
-**Option A — `resource` config:**
+**Option A : `resource` config:**
 ```typescript
 defineDocumentFunction({
   name: 'production-only',
@@ -512,7 +512,7 @@ defineDocumentFunction({
 })
 ```
 
-**Option B — GROQ filter:**
+**Option B : GROQ filter:**
 ```typescript
 defineDocumentFunction({
   name: 'production-only',

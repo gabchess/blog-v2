@@ -5,7 +5,7 @@ description: Patterns for Sanity Page Builder arrays, block components, and live
 
 # Sanity Page Builder Patterns
 
-This guide covers **Page Builder** patterns—arrays of block objects that allow content teams to compose flexible page layouts. For Portable Text (rich text within documents), see `portable-text.md`.
+This guide covers **Page Builder** patterns:arrays of block objects that allow content teams to compose flexible page layouts. For Portable Text (rich text within documents), see `portable-text.md`.
 
 ## 1. What is a Page Builder?
 
@@ -19,7 +19,7 @@ A page builder is an **array of objects** (`pageBuilder[]`) that allows content 
 **When NOT to use:**
 - Rigid, formulaic content (blog posts, product pages)
 - Highly structured data that doesn't change layout
-- Rich text within a document body—use Portable Text instead
+- Rich text within a document body:use Portable Text instead
 
 ## 2. Schema Organization
 

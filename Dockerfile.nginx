@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # =============================================================================
-# Production Dockerfile for Turborepo Monorepo — Frontend (Nginx)
+# Production Dockerfile for Turborepo Monorepo: Frontend (Nginx)
 # =============================================================================
 # Build: docker build --build-arg APP=web -t myapp-web -f Dockerfile.nginx .
 # Run:   docker run -p 4000:4000 myapp-web

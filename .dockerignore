@@ -6,10 +6,10 @@
 **/Dockerfile*
 **/networks.json
 
-# Dependencies — reinstalled during Docker build
+# Dependencies: reinstalled during Docker build
 **/node_modules/
 
-# Build artifacts — generated at container start
+# Build artifacts: generated at container start
 **/build/
 **/generated/
 **/dist/

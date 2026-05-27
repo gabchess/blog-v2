@@ -247,9 +247,9 @@ defineField({
 
 ### Migration Workflow
 
-**Phase 1: Deprecate** — Apply the deprecation pattern above. Deploy.
+**Phase 1: Deprecate** : Apply the deprecation pattern above. Deploy.
 
-**Phase 2: Migrate** — Update frontend to use new fields (with `coalesce()` fallbacks). Create a migration:
+**Phase 2: Migrate** : Update frontend to use new fields (with `coalesce()` fallbacks). Create a migration:
 
 ```typescript
 // migrations/rename-oldTitle-to-newTitle/index.ts
@@ -279,7 +279,7 @@ sanity migration run rename-oldTitle-to-newTitle
 sanity migration run rename-oldTitle-to-newTitle --no-dry-run
 ```
 
-**Phase 3: Remove** — Once `oldTitle` is undefined for all documents, delete the field definition.
+**Phase 3: Remove** : Once `oldTitle` is undefined for all documents, delete the field definition.
 
 ## 7. Validation Patterns
 

@@ -32,7 +32,7 @@ interface MarkdownEditorProps {
    * link popover so paste/autolink/manual-insert all share one gate. Default
    * is a baseline http(s) + no-userinfo check.
    *
-   * Must be referentially stable — Tiptap's `useEditor` does not have it in
+   * Must be referentially stable. Tiptap's `useEditor` does not have it in
    * a deps array, so the validator is captured once on first mount. Pass a
    * module-scoped function (or `useCallback` with stable deps), not an inline
    * arrow.
@@ -87,7 +87,7 @@ function MarkdownEditor({
   className,
   validateUrl = defaultValidateUrl,
 }: MarkdownEditorProps) {
-  // Hold onChange in a ref so the editor — created once — always sees the
+  // Hold onChange in a ref so the editor (created once) always sees the
   // latest closure without re-creating (which would lose selection/focus).
   // validateUrl is captured directly: the prop is documented as stable so
   // it's safe to read once on mount.

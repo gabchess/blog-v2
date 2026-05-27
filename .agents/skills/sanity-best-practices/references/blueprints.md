@@ -25,7 +25,7 @@ Blueprint (code) → Stack (deployed state) → Resources (real infrastructure)
 1. Initialize and edit a Blueprint file describing desired resources
 2. Run `sanity blueprints deploy` to apply changes to resources in a Stack
 3. Blueprints creates/updates a Stack with your resources
-4. The Stack persists — future deploys update it based on Blueprint changes
+4. The Stack persists : future deploys update it based on Blueprint changes
 
 **Key insight:** The Blueprint is your *intent*. The Stack is *reality*. Blueprints reconciles the two.
 
@@ -81,8 +81,8 @@ Modify your Blueprint and redeploy. Blueprints handles creating, updating, or re
 
 ## Key Behaviors
 
-- **Additive by default** — New resources in the Blueprint are created
-- **Updates in place** — Changed resources are updated when possible
-- **Removal = destruction** — Resources removed from the Blueprint are destroyed from the Stack
-- **References** — Resources can reference each other (e.g., a webhook can reference a dataset)
-- **Rollback on failure** — If a deployment fails partway through, Blueprints attempts to rollback
+- **Additive by default** : New resources in the Blueprint are created
+- **Updates in place** : Changed resources are updated when possible
+- **Removal = destruction** : Resources removed from the Blueprint are destroyed from the Stack
+- **References** : Resources can reference each other (e.g., a webhook can reference a dataset)
+- **Rollback on failure** : If a deployment fails partway through, Blueprints attempts to rollback

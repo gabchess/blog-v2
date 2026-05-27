@@ -7,12 +7,12 @@
 // effect gated on a `lastEmittedRef` assigned `value` *before* `setContent`
 // ran, unconditionally of whether the write landed. If that first write hit a
 // transiently-destroyed / not-yet-ready editor view (which @tiptap/react v3's
-// scheduled destroy/recreate genuinely produces — observed in-browser as the
+// scheduled destroy/recreate genuinely produces, observed in-browser as the
 // value-sync effect running against an editor reporting `isDestroyed ===
 // true`), the ref was permanently poisoned (`lastEmittedRef === value`) and
 // every later render short-circuited, so the field stayed blank forever. The
 // read-only preview uses a stateless MarkdownView that re-derives from live
-// content, so it always showed the text — hence filled preview, empty
+// content, so it always showed the text: hence filled preview, empty
 // editor, identical underlying data.
 //
 // The fix compares `value` against the editor's *live* markdown
@@ -51,7 +51,7 @@ vi.mock('@tiptap/react', () => {
     missNextSetContent: boolean;
     setContentCalls: number;
     // When set, the next editor instance is created empty regardless of the
-    // `content` option — models @tiptap/react v3 recreating the editor with a
+    // `content` option: models @tiptap/react v3 recreating the editor with a
     // not-ready view (the "parsed to an empty doc" case in the root cause).
     nextEditorEmpty: boolean;
   } = {
@@ -112,7 +112,7 @@ vi.mock('@tiptap/react', () => {
 
   return {
     __control: control,
-    // One stable fake per mounted editor — mirrors the real hook (content is
+    // One stable fake per mounted editor, mirrors the real hook (content is
     // applied once at creation; later prop changes flow only through
     // MarkdownEditor's value-sync effect, the unit under test).
     useEditor: (options: { content?: string }) => {
@@ -176,7 +176,7 @@ describe('MarkdownEditor external value sync', () => {
   });
 
   // The concretely-provable half of the fix. Pre-fix the value-sync effect
-  // was `if (!editor) return;` — no isDestroyed guard — so when the effect
+  // was `if (!editor) return;`, no isDestroyed guard, so when the effect
   // runs against a transiently-destroyed @tiptap/react v3 instance (which its
   // scheduled destroy/recreate genuinely produces; observed in-browser) it
   // still assigned `lastEmittedRef = value` and called `setContent` on the
@@ -198,7 +198,7 @@ describe('MarkdownEditor external value sync', () => {
   // Editor instance on its scheduled destroy/recreate (refreshEditorInstance
   // → new Editor → MarkdownEditor's `editor` changes → the [editor, value]
   // effect re-runs). If that fresh instance comes up empty (a not-ready view
-  // — the "parsed to an empty doc" case) while `value` is unchanged, the
+  // (the "parsed to an empty doc" case) while `value` is unchanged, the
   // pre-fix `value === lastEmittedRef.current` short-circuits and the new
   // editor stays blank forever even though the preview shows the text. The
   // live `getMarkdown()` compare re-syncs the replacement editor. This guards

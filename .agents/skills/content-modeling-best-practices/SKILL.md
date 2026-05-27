@@ -18,15 +18,15 @@ Reference these guidelines when:
 
 ## Core Principles
 
-1. **Content is data, not pages** — Structure content for meaning, not presentation
-2. **Single source of truth** — Avoid content duplication
-3. **Future-proof** — Design for channels that don't exist yet
-4. **Editor-centric** — Optimize for the people creating content
+1. **Content is data, not pages** : Structure content for meaning, not presentation
+2. **Single source of truth** : Avoid content duplication
+3. **Future-proof** : Design for channels that don't exist yet
+4. **Editor-centric** : Optimize for the people creating content
 
 ## References
 
 Start with the reference that matches the modeling decision in front of you, instead of loading every topic at once. See `references/` for detailed guidance on specific topics:
-- `references/separation-of-concerns.md` — Separating content from presentation
-- `references/reference-vs-embedding.md` — When to use references vs embedded objects
-- `references/content-reuse.md` — Content reuse patterns and the reuse spectrum
-- `references/taxonomy-classification.md` — Flat, hierarchical, and faceted classification
+- `references/separation-of-concerns.md` : Separating content from presentation
+- `references/reference-vs-embedding.md` : When to use references vs embedded objects
+- `references/content-reuse.md` : Content reuse patterns and the reuse spectrum
+- `references/taxonomy-classification.md` : Flat, hierarchical, and faceted classification

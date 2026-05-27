@@ -120,7 +120,7 @@ export class SanityService {
 }
 ```
 
-For preview/draft content, create a second client instance with a token and `useCdn: false`. Never expose tokens in client-side bundles — use server-side rendering or a proxy endpoint for authenticated requests.
+For preview/draft content, create a second client instance with a token and `useCdn: false`. Never expose tokens in client-side bundles : use server-side rendering or a proxy endpoint for authenticated requests.
 
 ## 3. Data Fetching Patterns
 
@@ -164,7 +164,7 @@ export default class PostComponent {
 
 The `resource` automatically re-fetches when `slug` changes and exposes `value()`, `isLoading()`, and `error()` signals.
 
-> **TypeGen:** Wrapping queries in `defineQuery` enables Sanity TypeGen to infer return types automatically — no manual type imports needed. See `typegen.md` for the full workflow.
+> **TypeGen:** Wrapping queries in `defineQuery` enables Sanity TypeGen to infer return types automatically : no manual type imports needed. See `typegen.md` for the full workflow.
 
 ### B. `rxResource` (Observable-based)
 
@@ -254,7 +254,7 @@ export const routes: Routes = [
 ]
 ```
 
-With `withComponentInputBinding()`, the `:slug` route param is automatically bound to `slug = input.required<string>()` on the component — no need to inject `ActivatedRoute`.
+With `withComponentInputBinding()`, the `:slug` route param is automatically bound to `slug = input.required<string>()` on the component : no need to inject `ActivatedRoute`.
 
 ## 5. Portable Text Rendering
 
@@ -348,7 +348,7 @@ Combine with Angular's `NgOptimizedImage` for LCP images:
 
 ### LQIP with `NgOptimizedImage`
 
-Sanity provides a base64 LQIP (Low Quality Image Placeholder) per image asset — but you must query it explicitly:
+Sanity provides a base64 LQIP (Low Quality Image Placeholder) per image asset : but you must query it explicitly:
 
 ```groq
 mainImage {
@@ -387,9 +387,9 @@ See `image.md` for image field schema patterns and hotspot/crop configuration.
 
 When building with Sanity, leverage these Angular 19+ features:
 
-- **Standalone components** — Default in Angular 19. No `NgModule` boilerplate needed.
-- **Signals and `resource`** — Preferred over RxJS for data fetching. Simpler, less boilerplate.
-- **New control flow** — Use `@if`, `@for`, `@switch` with `@empty` for cleaner templates:
+- **Standalone components** : Default in Angular 19. No `NgModule` boilerplate needed.
+- **Signals and `resource`** : Preferred over RxJS for data fetching. Simpler, less boilerplate.
+- **New control flow** : Use `@if`, `@for`, `@switch` with `@empty` for cleaner templates:
 
 ```html
 @for (post of posts.value(); track post._id) {
@@ -399,7 +399,7 @@ When building with Sanity, leverage these Angular 19+ features:
 }
 ```
 
-- **`@defer` blocks** — Lazy-load below-fold content:
+- **`@defer` blocks** : Lazy-load below-fold content:
 
 ```html
 @defer (on viewport) {
@@ -409,8 +409,8 @@ When building with Sanity, leverage these Angular 19+ features:
 }
 ```
 
-- **`inject()` function** — Preferred over constructor injection for cleaner code.
-- **Zoneless change detection** — Experimental in Angular 19. Works well with signals-based data fetching since signals automatically notify the framework of changes.
+- **`inject()` function** : Preferred over constructor injection for cleaner code.
+- **Zoneless change detection** : Experimental in Angular 19. Works well with signals-based data fetching since signals automatically notify the framework of changes.
 
 ## 8. SSR & Prerendering
 
@@ -503,7 +503,7 @@ export const serverRoutes: ServerRoute[] = [
 ]
 ```
 
-❌ **Bad:** Using `isPlatformBrowser()` in templates to conditionally render content — causes hydration mismatch.
+❌ **Bad:** Using `isPlatformBrowser()` in templates to conditionally render content : causes hydration mismatch.
 
 ✅ **Good:** Using `@defer` or `afterNextRender()` for browser-only code.
 

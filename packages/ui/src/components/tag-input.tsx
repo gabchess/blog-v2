@@ -18,7 +18,7 @@ interface TagInputProps {
    * - `'case-insensitive'` (default): collapses "Foo" against "foo". Right
    *   for hashtags, categories, anything where casing is incidental.
    * - `'case-sensitive'`: collapses exact matches only.
-   * - `false`: never dedupe — required for fields like Members where two
+   * - `false`: never dedupe, required for fields like Members where two
    *   people can legitimately share a name. Callers using this mode should
    *   provide stable identity for re-keying (e.g. by storing `{id, name}`
    *   in their data model and projecting names into TagInput).
@@ -101,7 +101,7 @@ function TagInput({
   };
 
   // With dedupe on, the tag string itself is unique and stable. With dedupe
-  // off, duplicates are legal — fall back to a positional key. Callers that
+  // off, duplicates are legal; fall back to a positional key. Callers that
   // need stable identity in dedupe={false} mode should map their data into
   // unique-per-row strings before passing to value.
   const keyFor = (tag: string, i: number) => (dedupe === false ? `${i}:${tag}` : tag);

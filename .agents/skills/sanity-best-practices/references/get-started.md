@@ -8,9 +8,9 @@ description: Use these rules when users ask to 'Get started with Sanity' or need
 ## Overview
 
 Getting started with Sanity follows three phases:
-1. **Studio & Schema** — Set up Sanity Studio and define your content model
-2. **Content** — Import existing content or generate placeholder content via MCP
-3. **Frontend** — Integrate with your application (framework-specific)
+1. **Studio & Schema** : Set up Sanity Studio and define your content model
+2. **Content** : Import existing content or generate placeholder content via MCP
+3. **Frontend** : Integrate with your application (framework-specific)
 
 ## Communication Style
 
@@ -269,11 +269,11 @@ Once setup is complete, let the user know:
 
 "You're all set! Here are some things I can help with:
 
-- **Visual Editing** — Click-to-edit in the Presentation tool (`visual-editing.md`)
-- **TypeGen** — Type-safe queries with generated types (`typegen.md`)
-- **Studio Structure** — Customize the Studio sidebar (`studio-structure.md`)
-- **SEO** — Metadata, sitemaps, and Open Graph (`seo.md`)
-- **i18n** — Multi-language content (`localization.md`)
+- **Visual Editing** : Click-to-edit in the Presentation tool (`visual-editing.md`)
+- **TypeGen** : Type-safe queries with generated types (`typegen.md`)
+- **Studio Structure** : Customize the Studio sidebar (`studio-structure.md`)
+- **SEO** : Metadata, sitemaps, and Open Graph (`seo.md`)
+- **i18n** : Multi-language content (`localization.md`)
 
 Just ask about any of these!"
 
@@ -308,8 +308,8 @@ npm run typegen                  # Generate TypeScript types
 
 ## Important Notes
 
-- **Be succinct** — Guide step-by-step without over-explaining
-- **Check context first** — Read existing files before suggesting changes
-- **Don't give up** — If something fails, give the user a way to complete manually
-- **Deploy schema early** — MCP tools won't work without it
-- **One phase at a time** — Complete each phase before moving to the next
+- **Be succinct** : Guide step-by-step without over-explaining
+- **Check context first** : Read existing files before suggesting changes
+- **Don't give up** : If something fails, give the user a way to complete manually
+- **Deploy schema early** : MCP tools won't work without it
+- **One phase at a time** : Complete each phase before moving to the next

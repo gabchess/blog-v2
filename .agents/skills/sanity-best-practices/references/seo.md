@@ -9,10 +9,10 @@ description: SEO best practices for Sanity with Next.js, including metadata, Ope
 
 SEO doesn't require complex configurations. A few core principles, applied consistently:
 
-- **Smart defaults with optional overrides** — Don't require SEO fields; use existing content as fallback
-- **Use GROQ for fallback logic** — Move conditional logic into queries, not components
-- **Leverage Next.js APIs** — Use `generateMetadata`, `sitemap.ts`, not manual `<meta>` tags
-- **Structured content = structured data** — Your content model is already SEO-ready
+- **Smart defaults with optional overrides** : Don't require SEO fields; use existing content as fallback
+- **Use GROQ for fallback logic** : Move conditional logic into queries, not components
+- **Leverage Next.js APIs** : Use `generateMetadata`, `sitemap.ts`, not manual `<meta>` tags
+- **Structured content = structured data** : Your content model is already SEO-ready
 
 ## 2. SEO Schema Type (Reusable)
 
@@ -78,11 +78,11 @@ Use `coalesce()` to provide fallback values. This keeps frontend logic clean.
 }
 ```
 
-**Key principle:** `seo.title` will never be `null` — it contains either the SEO override, the page title, or empty string.
+**Key principle:** `seo.title` will never be `null` : it contains either the SEO override, the page title, or empty string.
 
 ## 4. Next.js Metadata (The Right Way)
 
-Use `generateMetadata` — never render `<title>` or `<meta>` tags directly in components.
+Use `generateMetadata` : never render `<title>` or `<meta>` tags directly in components.
 
 ```typescript
 // app/(frontend)/[slug]/page.tsx

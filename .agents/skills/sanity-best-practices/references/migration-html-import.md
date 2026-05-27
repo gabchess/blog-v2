@@ -85,7 +85,7 @@ function cleanHtml(html) {
 
 ### Image Upload
 
-Don't just link external images—upload them:
+Don't just link external images:upload them:
 
 ```javascript
 async function uploadImage(client, imageUrl) {

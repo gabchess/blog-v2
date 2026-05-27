@@ -22,7 +22,6 @@ apps/web              Vite + React 19 frontend (the blog)
 packages/ui           @workspace/ui shadcn component library
 packages/validation   Zod schemas for content validation
 docker/               nginx.conf for the GCP deploy
-scripts/              dev tooling
 ```
 
 ## Commands
@@ -35,4 +34,4 @@ pnpm lint                             # lint all packages
 pnpm test                             # unit tests
 ```
 
-Deploy: `Dockerfile.nginx` + `docker/nginx.conf` (static + SPA fallback). `docker-compose.yml` for local verification.
+Deploy: `Dockerfile.nginx` + `docker/nginx.conf` (static + SPA fallback).

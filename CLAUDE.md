@@ -12,7 +12,6 @@ Octant content blog. pnpm + turbo monorepo. Vite + React 19 frontend, Prismic fo
 - `packages/ui`: `@workspace/ui` shadcn component library
 - `packages/validation`: Zod schemas for content validation
 - `docker/`: Nginx config for the production deploy
-- `scripts/`: tooling scripts
 
 ## Common commands
 
@@ -31,7 +30,7 @@ pnpm test                             # unit tests
 - `main` is the production-ready baseline. Cut feature branches off main.
 - Node 22 (pinned via `.nvmrc`). Local v20 works but pnpm warns.
 - Workspace deps use `workspace:*` syntax.
-- Turbo commands need `dotenv --` prefix outside root scripts.
+- Turbo commands run without dotenv prefix (no .env file in repo).
 
 ## Out of scope
 
