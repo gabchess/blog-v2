@@ -1,8 +1,0 @@
-[package]
-name = "vote-prover-app"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-pico-sdk = { workspace = true }
-vote-prover-lib = { path = "../lib" }
