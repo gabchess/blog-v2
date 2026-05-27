@@ -103,3 +103,4 @@ apps/subgraph/networks.json
 
 # Misc
 test.http
+.gstack/

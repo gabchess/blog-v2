@@ -1,23 +1,11 @@
-import { WalletConnection } from './components/WalletConnection';
-import { TransferHistory } from './components/TransferHistory';
-import { TotalSupply } from './components/TotalSupply';
+import { Button } from '@workspace/ui/components/button';
 
 export function App() {
   return (
     <div style={{ fontFamily: 'system-ui', padding: '2rem' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '1rem',
-        }}
-      >
-        <h1 style={{ margin: 0 }}>Octant</h1>
-        <TotalSupply />
-      </div>
-      <WalletConnection />
-      <TransferHistory />
+      <h1 style={{ margin: 0 }}>Octant</h1>
+      <p style={{ marginTop: '1rem', color: '#666' }}>Blog scaffolding pivot in progress.</p>
+      <Button style={{ marginTop: '1rem' }}>Hello from @workspace/ui</Button>
     </div>
   );
 }

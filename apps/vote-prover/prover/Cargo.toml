@@ -1,8 +1,0 @@
-[workspace]
-members = ["app", "lib", "script"]
-resolver = "2"
-
-[workspace.dependencies]
-serde = { version = "1.0", features = ["derive"] }
-hex = "0.4"
-pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v1.2.2" }

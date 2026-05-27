@@ -12,8 +12,6 @@
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../../packages/subgraph-client" },
-    { "path": "../../packages/validation" },
-    { "path": "../../packages/web3" }
+    { "path": "../../packages/validation" }
   ]
 }
