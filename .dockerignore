@@ -1,0 +1,26 @@
+.git
+.gitignore
+.gitattributes
+**/.env*
+**/CLAUDE.md
+**/Dockerfile*
+**/networks.json
+
+# Dependencies: reinstalled during Docker build
+**/node_modules/
+
+# Build artifacts: generated at container start
+**/build/
+**/generated/
+**/dist/
+**/.turbo/
+**/.cache/
+
+# Test and coverage
+**/coverage/
+**/__snapshots__/
+
+# Local dev
+**/docker-compose*.yml
+.DS_Store
+**/*.log
